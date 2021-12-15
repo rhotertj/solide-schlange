@@ -1,23 +1,18 @@
+include("battlesnake.jl")
+include("algorithms.jl")
+include("minimax.jl")
+include("agent.jl")
 using Joseki, JSON, HTTP
 
 ### Create some endpoints
 
-# This function takes two numbers x and y from the query string and returns x^y
-# In this case they need to be identified by name and it should be called with
-# something like 'http://localhost:8000/pow/?x=2&y=3'
-function pow(req::HTTP.Request)
-    j = HTTP.queryparams(HTTP.URI(req.target))
-    has_all_required_keys(["x", "y"], j) || return error_responder(req, "You need to specify values for x and y!")
-    # Try to parse the values as numbers.  If there's an error here the generic
-    # error handler will deal with it.
-    x = parse(Float32, j["x"])
-    y = parse(Float32, j["y"])
-    json_responder(req, x^y)
+
+function index(req::HTTP.Request)
+    response_dict = Dict("name" => "solide schlange", "color" => "#002b38", "head" => "shades", "tail" => "bold", "apiversion" => "1")
+    json_responder(req, response_dict)
 end
 
-# This function takes two numbers n and k from a JSON-encoded request
-# body and returns binomial(n, k)
-function bin(req::HTTP.Request)
+function move(req::HTTP.Request)
     j = try
         body_as_dict(req)
     catch err
@@ -31,10 +26,14 @@ end
 
 # Make a router and add routes for our endpoints.
 endpoints = [
-    (pow, "GET", "/pow"),
-    (bin, "POST", "/bin")
+    (index, "GET", "/"),
+    (index, "GET", "/index"),
+    (start_game, "POST", "/start"),
+    (move, "POST", "/move"),
+    (end_game, "POST", "/end"),
+
 ]
 r = Joseki.router(endpoints)
 
 # Fire up the server
-HTTP.serve(r, "127.0.0.1", 8000; verbose=false)
+HTTP.serve(r, "127.0.0.1", 8000; verbose=true)

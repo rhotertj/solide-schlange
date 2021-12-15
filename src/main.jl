@@ -1,7 +1,7 @@
 include("battlesnake.jl")
 include("algorithms.jl")
 include("minimax.jl")
-
+include("agent.jl")
 println("Import all done")
 
 snake1 = Snake([Position(1,1), Position(1,2), Position(1,3)], false, 100)
