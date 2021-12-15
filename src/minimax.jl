@@ -103,16 +103,16 @@ function check_winner(snakes, player, height, width)
         # head2head
         if get_head(snek) == get_head(opponent_snake)
             # RAM
-            if length(snek.body) > length(snek.body)
+            if length(snek.body) > length(opponent_snake.body)
                 return player
             end
             # draw
-            if length(snek.body) == length(snek.body)
+            if length(snek.body) == length(opponent_snake.body)
                 return -1
             end            
         end
 
-        # collision with opponent_snake
+        # lost (head2head) collision with opponent_snake
         return opponent
     end
     # collision with self
