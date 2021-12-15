@@ -70,6 +70,7 @@ function possible_actions(snake::Snake)
     if head.y < neck.y
         return [down, right, left]
     end
+    return [up, down, left, right]
 end
 
 function move_snake!(snake::Snake, food::Food, action::Direction)
@@ -81,12 +82,16 @@ function move_snake!(snake::Snake, food::Food, action::Direction)
     end
     snake.ate_food = false
     snake.health -= 1
+    food_eaten = -1
     for i in 1:length(food.positions)
         if new_head == food.positions[i]
             snake.ate_food = true
-            deleteat!(food.positions, i)
+            food_eaten = i
             snake.health = 100
         end
+    end
+    if food_eaten > -1
+        deleteat!(food.positions, food_eaten)
     end
 end
 
@@ -118,4 +123,5 @@ function print_board(state::Boardstate)
         println(board[r, :])
     end
 end
+
 # end # module end

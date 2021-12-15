@@ -7,42 +7,42 @@ struct MinimaxNode
     food::Food
     height::Int
     width::Int
-    parent::Union{MinimaxNode, Nothing}
+    depth::Int
     action::Union{Direction, Nothing}
     winner::Union{Int, Nothing}
 end
 
 function iterative_deepening(board::Boardstate, simulation_time::Float64, height::Int, width::Int, you_index::Int)
-    simulation_time = Millisecond(simulation_time*100)
-
+    simulation_time = Millisecond(floor(Int,simulation_time))
     snakes = board.snakes
     food = board.food
-    root = MinimaxNode(snakes, food, height, width, nothing, nothing, nothing)
+    root = MinimaxNode(snakes, food, height, width, 0, nothing, nothing)
     action_nodes = possible_successors(root, you_index)
-
     best_action = nothing
     depth = 1
 
     start = now()
     while now() - start < simulation_time
-        values = Tuple{Int, Direction}[]
+        values = Tuple{Float64, MinimaxNode}[]
+
         for a_node in action_nodes
             score = minimax(a_node, depth, -Inf, Inf, 1, you_index)
-            push!(values, (score, a_node.action))
+            push!(values, (score, a_node))
         end
-        depth +=1
-        sort!(values, by= x -> x[1], rev=true)
-        best_action = values[1][2]
-        # println(values)
+        depth += 1
+        if length(values) == length(action_nodes)
+            sort!(values, by= x -> x[1], rev=true)
+            best_action = values[1][2].action
+            action_nodes = [v[2] for v in values]
+        end
     end
-    
     println("$depth")
     return best_action
 end
 
 function minimax(node::MinimaxNode, depth::Int, alpha::Float64, beta::Float64, player::Int, you_index::Int)
     if depth == 0 || node.winner !== nothing
-        return score(node, player) # metric or win/lose
+        return score(node, you_index) # metric or win/lose
     end
 
     next_player = (player % 2) + 1
@@ -72,14 +72,13 @@ end
 function possible_successors(node::MinimaxNode, player::Int)
     successors = MinimaxNode[]
     snek = node.snakes[player]
-
     for a in possible_actions(snek)
         new_snek, new_food = deepcopy(snek), deepcopy(node.food)
         move_snake!(new_snek, new_food, a)
         snakes = deepcopy(node.snakes)
         snakes[player] = new_snek
         winner = check_winner(snakes, player, node.height, node.width)
-        n = MinimaxNode(snakes, new_food, node.height, node.width, node, a, winner)
+        n = MinimaxNode(snakes, new_food, node.height, node.width, node.depth + 1, a, winner)
         push!(successors, n)
     end
 
@@ -121,14 +120,15 @@ function check_winner(snakes, player, height, width)
 end
 
 function score(node::MinimaxNode, player::Int)
+    discount = 0.9 ^ node.depth
     h_factor = 1
     l_factor = 4
     f_factor = 1
     if node.winner == player
-        return 200
+        return 200 * discount
     end
     if node.winner == (player % 2) + 1
-        return -200
+        return -200 * discount
     end
     # draw
     if node.winner == -1
@@ -139,6 +139,6 @@ function score(node::MinimaxNode, player::Int)
     len_diff = 2 * length(node.snakes[player].body) - sum([length(s.body) for s in node.snakes])
     flood = floodfill(node.snakes, node.width, node.height, player)
 
-    return h_factor * health_diff + l_factor * len_diff + f_factor * flood
+    return h_factor * health_diff + l_factor * len_diff + f_factor * flood * discount
 end
 
