@@ -7,7 +7,11 @@ struct Agent
     const color = "#002b38"    
 end
 
-function start()
+function index()
+
+end
+
+function start_game()
     
 end
 
@@ -15,6 +19,6 @@ function move()
 
 end
 
-function end()
+function end_game()
     
 end
