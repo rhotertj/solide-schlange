@@ -7,20 +7,20 @@ println("Import all done")
 # Turn 7 https://play.battlesnake.com/g/73639a35-ade8-42ee-9584-72f2a44266ef/
 snake1 = Snake(
     [
-        Position(6,5),
-        Position(7,5), 
-        Position(8,5),
-        Position(8,4)
+        Position(5,6),
+        Position(5,5), 
+        Position(5,4),
+        Position(4,4)
     ],
     false,
     100
     )
 snake2 = Snake(
     [
-        Position(7,6), 
-        Position(8,6), 
-        Position(9,6),
-        Position(9,7),
+        Position(6,5), 
+        Position(6,4), 
+        Position(6,3),
+        Position(7,3),
     ],
     false,
     100
@@ -33,7 +33,7 @@ food = Food([Position(6,6)])
 
 board = Boardstate([snake1, snake2], food, height, width)
 
-# print_board(board)
+print_board(board)
 # flood = floodfill([snake1, snake2], width, height, 1)
 # println(flood)
 a = iterative_deepening(board, 400.0, height, width, 1)
