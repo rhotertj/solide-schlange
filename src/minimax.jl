@@ -30,7 +30,7 @@ function iterative_deepening(board::Boardstate, simulation_time::Float64, height
 
         for a_node in action_nodes
             if now() - start < simulation_time
-                score = minimax(a_node, depth, -Inf, Inf, 1, you_index)
+                score = minimax(a_node, depth, -Inf, Inf, (you_index % 2) + 1, you_index)
                 push!(values, (score, a_node))
             end
         end
