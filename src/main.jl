@@ -4,11 +4,32 @@ include("minimax.jl")
 include("agent.jl")
 println("Import all done")
 
-snake1 = Snake([Position(1,1), Position(1,2), Position(1,3)], false, 100)
-snake2 = Snake([Position(4,3), Position(5,3), Position(6,3)], false, 100)
+# Turn 7 https://play.battlesnake.com/g/73639a35-ade8-42ee-9584-72f2a44266ef/
+snake1 = Snake(
+    [
+        Position(6,5),
+        Position(7,5), 
+        Position(8,5),
+        Position(8,4)
+    ],
+    false,
+    100
+    )
+snake2 = Snake(
+    [
+        Position(7,6), 
+        Position(8,6), 
+        Position(9,6),
+        Position(9,7),
+    ],
+    false,
+    100
+    )
+
+
 time = 400 # ms
 height, width = 11, 11
-food = Food([Position(2,2)])
+food = Food([Position(6,6)])
 
 board = Boardstate([snake1, snake2], food, height, width)
 
