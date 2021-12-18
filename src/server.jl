@@ -99,4 +99,4 @@ endpoints = [
 r = Joseki.router(endpoints)
 
 # Fire up the server
-HTTP.serve(r, "0.0.0.0", 8000, verbose=false)
+HTTP.serve(r, "0.0.0.0", 8011, verbose=false)
