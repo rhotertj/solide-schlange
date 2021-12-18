@@ -53,11 +53,11 @@ function possible_actions(snake::Snake)
     head = snake.body[1]
     neck = snake.body[2]
     # coming from right
-    if head.x > neck.x
+    if head.x < neck.x
         return [up, down, left]
     end
     # coming from left
-    if head.x < neck.x
+    if head.x > neck.x
         return [up, down, right]
     end
 

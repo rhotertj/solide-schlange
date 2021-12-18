@@ -67,7 +67,7 @@ function move_req(req::HTTP.Request)
             push!(body, pos)
             #end
         end
-        snake = Snake(copy(body), false, sn["health"])
+        snake = Snake(deepcopy(body), false, sn["health"])
         push!(snakes, snake)
     end
 

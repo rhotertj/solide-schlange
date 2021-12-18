@@ -23,9 +23,13 @@ function iterative_deepening(board::Boardstate, simulation_time::Float64, height
 
     start = now()
     last_time = Millisecond(0)
+    values = Tuple{Float64, MinimaxNode}[]
     while now() - start + last_time < simulation_time
+        if depth == 2
+            break
+        end
         start_run = now()
-        values = Tuple{Float64, MinimaxNode}[]
+        empty!(values)
 
         for a_node in action_nodes
             if now() - start < simulation_time
@@ -41,7 +45,8 @@ function iterative_deepening(board::Boardstate, simulation_time::Float64, height
         end
         last_time = now() - start_run
     end
-    println("$depth")
+    # println("$depth")
+    # println([(v[1], v[2].action) for v in values])
     return best_action
 end
 
