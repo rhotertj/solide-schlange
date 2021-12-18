@@ -25,9 +25,6 @@ function iterative_deepening(board::Boardstate, simulation_time::Float64, height
     last_time = Millisecond(0)
     values = Tuple{Float64, MinimaxNode}[]
     while now() - start + last_time < simulation_time
-        if depth == 2
-            break
-        end
         start_run = now()
         empty!(values)
 
