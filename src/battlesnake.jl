@@ -124,4 +124,8 @@ function print_board(state::Boardstate)
     end
 end
 
+function next_player(current_player, num_players)
+    return (current_player % num_players) + 1
+end
+
 # end # module end

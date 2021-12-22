@@ -127,7 +127,7 @@ function check_winner(snakes, player, height, width)
 end
 
 function score(node::MinimaxNode, player::Int)
-    discount = 0.9 ^ node.depth
+    discount = 0.99 ^ node.depth
     h_factor = 1
     l_factor = 4
     f_factor = 1
