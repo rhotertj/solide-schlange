@@ -128,8 +128,12 @@ end
 
 function score(node::MinimaxNode, player::Int)
     discount = 0.99 ^ node.depth
-    h_factor = 1
-    l_factor = 4
+    h_factor = 2
+    if length(node.snakes[player].body) >= 10
+        l_factor = 10
+    else
+        l_factor = -10
+    end
     f_factor = 1
     if node.winner == player
         return 200 * discount
@@ -139,7 +143,7 @@ function score(node::MinimaxNode, player::Int)
     end
     # draw
     if node.winner == -1
-        return 0
+        return -50
     end
     snek = node.snakes[player]
     health_diff = 2 * snek.health - sum([s.health for s in node.snakes])
