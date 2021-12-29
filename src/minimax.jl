@@ -130,9 +130,9 @@ function score(node::MinimaxNode, player::Int)
     discount = 0.99 ^ node.depth
     h_factor = 2
     if length(node.snakes[player].body) >= 10
-        l_factor = 10
-    else
         l_factor = -10
+    else
+        l_factor = 10
     end
     f_factor = 1
     if node.winner == player
