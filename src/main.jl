@@ -2,6 +2,7 @@ include("battlesnake.jl")
 include("algorithms.jl")
 include("minimax.jl")
 include("agent.jl")
+include("maxn.jl")
 println("Import all done")
 
 # Turn 7 https://play.battlesnake.com/g/73639a35-ade8-42ee-9584-72f2a44266ef/
@@ -21,6 +22,16 @@ snake2 = Snake(
         Position(6,4), 
         Position(6,3),
         Position(7,3),
+    ],
+    false,
+    100
+    )
+snake3 = Snake(
+    [
+        Position(1,1), 
+        Position(1,2), 
+        Position(1,3),
+        Position(1,4),
     ],
     false,
     100
@@ -72,12 +83,12 @@ food = Food([Position(6,6)])
 
 ### Play best move
 height, width = 11, 11
-board = Boardstate([snake1, snake2], food, height, width)
+board = Boardstate([snake1, snake2, snake3], food, height, width)
 
 print_board(board)
 # flood = floodfill([snake1, snake2], width, height, 1)
 # println(flood)
-a = iterative_deepening(board, 400.0, height, width, 1)
+a = iterative_deepening_maxn(board, 400.0, height, width, 1)
 println(a)
 move_snake!(snake1, food, a)
 winner = check_winner([snake1, snake2], 1, height, width)

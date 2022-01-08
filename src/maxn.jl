@@ -21,14 +21,14 @@ function iterative_deepening_maxn(board::Boardstate, simulation_time::Float64, h
     
         start = now()
         last_time = Millisecond(0)
-        values = Tuple{Vector{Float64}, MinimaxNode}[]
+        values = Tuple{Vector{Float64}, MaxNNode}[]
         while now() - start + last_time < simulation_time
             start_run = now()
             empty!(values)
     
             for a_node in action_nodes
                 if now() - start < simulation_time
-                    vector = maxn(a_node, depth, player, length(a_node.snakes), you_index)
+                    vector = maxn(a_node, depth, next_player(you_index, length(a_node.snakes)) , length(a_node.snakes), you_index)
                     push!(values, (vector, a_node))
                 end
             end
@@ -58,12 +58,14 @@ function maxn(node::MaxNNode, depth::Int, player::Int, num_players::Int, you_ind
         next_nodes = possible_successors(node, next_p)
         next_p = next_player(player, num_players)
     end
+
     for successor in next_nodes
-        vector = maxn(successor, depth - 1, player, length(node.snakes), you_index)
+        vector = maxn(successor, depth - 1, next_p, length(node.snakes), you_index)
+        if vector[player] > max_vector[player]
+            max_vector = vector
+        end
     end
-    if vector[player] > max_vector[player]
-        max_vector = vector
-    end
+    
     return max_vector
 end
 
@@ -71,24 +73,25 @@ function possible_successors(node::MaxNNode, player::Int)
     if player in node.dead
         return []
     end
-    successors = Vector{MaxNNode}[]
-    snake = self.snakes[player]
+    successors = MaxNNode[]
+    snake = node.snakes[player]
     for a in possible_actions(snake)
-        new_snek, new_food = move_snake(deepcopy(snake), deepcopy(node.food), a)
+        new_snek, new_food = deepcopy(snake), deepcopy(node.food)
+        move_snake!(new_snek, new_food, a)
         if !check_bounds(get_head(new_snek), node.height, node.width)
             continue
         end
         snakes = deepcopy(node.snakes)
         snakes[player] = new_snek
         dead_for_a = deepcopy(node.dead)
-        winner = enforce_rules(snakes, dead_for_a)
+        winner = check_winner(node, snakes, dead_for_a)
         n = MaxNNode(snakes, new_food, node.height, node.width, node.depth + 1, a, winner, dead_for_a)
         push!(successors, n)
     end
     return successors
 end
 
-function check_winner(node::MaxNNode, snakes::Vector{Snake}, dead::Vector{Int})
+function check_winner(node::MaxNNode, snakes::Vector{Snake}, dead::Set{Int})
     
     for (p, snek) in enumerate(snakes)
         # starve
@@ -138,5 +141,23 @@ function check_winner(node::MaxNNode, snakes::Vector{Snake}, dead::Vector{Int})
 end
 
 function score(node::MaxNNode)
+    result = zeros(length(node.snakes))
+    health = [snek.health for snek in node.snakes]
+    lens = [length(snek.body) for snek in node.snakes]
+    flood_values = maxN_floodfill(node.snakes, node.width, node.height)
+    for i in 1:length(node.snakes)
+        score = 1 * health[i] + 4 * lens[i] + 1 * flood_values[i]
+        result[i] += score
+    end
+
+    if !isnothing(node.winner)
+        result[node.winner] = 1000
+    end
+
+    for d in node.dead
+        result[d] = -1000
+    end
+
+    return result
 
 end
