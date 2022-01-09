@@ -33,3 +33,33 @@ function floodfill(snakes::Vector{Snake}, width::Int, height::Int, player::Int)
     return fields[player] - fields[opponent]
 end
 
+function maxN_floodfill(snakes::Vector{Snake}, width::Int, height::Int)
+    
+    fields = zeros(length(snakes))
+    visited = Set()
+    for snek in snakes
+        push!(visited, get_body_no_head(snek))
+    end
+
+    stack = Tuple{Position, Int}[]
+    for (p, snek) in enumerate(snakes)
+        push!(stack, (get_head(snek), p))
+    end
+
+    while !isempty(stack)
+        pos, p = popfirst!(stack)
+        if !(pos in visited)
+            push!(visited, pos)
+            fields[p] += 1
+            for d in (up, down, left, right)
+                next_pos = move_from(pos, d)
+                if !(next_pos in visited) && check_bounds(next_pos, height, width)
+                    push!(stack, (next_pos, p))
+                end
+            end
+        end
+    end
+
+    return fields
+end
+
