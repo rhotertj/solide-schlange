@@ -128,7 +128,7 @@ function check_winner(node::MaxNNode, snakes::Vector{Snake}, dead::Set{Int})
             if get_head(snek) in get_body_no_head(snek)
                 push!(dead, p)
             end
-            if !check_bounds(get_head(snek), height, width)
+            if !check_bounds(get_head(snek), node.height, node.width)
                 push!(dead, p)
             end
             
