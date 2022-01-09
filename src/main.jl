@@ -28,48 +28,35 @@ snake2 = Snake(
 
 food = Food([Position(6,6)])
 
-# Turn 73 https://play.battlesnake.com/g/15939765-2c43-4b3d-a42a-5c5810db4703/
-# snake1 = Snake(
-#     [
-#         Position(5,4),
-#         Position(4,4), 
-#         Position(4,5),
-#         Position(5,5),
-#         Position(5,6),
-#         Position(5,7),
-#         Position(4,7),
-#         Position(4,8),
-#     ],
-#     false,
-#     100
-#     )
-# snake2 = Snake(
-#     [
-#         Position(2,5), 
-#         Position(2,4), 
-#         Position(3,4),
-#         Position(3,3),
-#         Position(4,3),
-#         Position(5,3),
-#         Position(5,2),
-#     ],
-#     false,
-#     100
-#     )
 
-# food = Food(
-#     [
-#         Position(3,5),
-#         Position(3,9), 
-#         Position(1,11), 
-#         Position(8,5), 
-#         Position(9,7), 
-#         Position(9,8), 
-#     ]
-#     )
+# Weird head2head
+# Looks like "working as intended" since we don't move simultaneously in minimax
+# Why is this no problem in python though?
+# Would't the opponent win in the next step?
+# Turn 11 https://play.battlesnake.com/g/1a6794ac-9da9-4e32-a74b-b246797dbb16/
+snake1 = Snake(
+    [
+        Position(7,4),
+        Position(8,4), 
+        Position(8,3),
+        Position(7,3)
+    ],
+    false,
+    100
+    )
+snake2 = Snake(
+    [
+        Position(6,5), 
+        Position(6,6), 
+        Position(6,7),
+        Position(5,7),
+        Position(4,7),
+    ],
+    false,
+    100
+    )
 
-
-
+food = Food([Position(11,5), Position(9,2)])
 ### Play best move
 height, width = 11, 11
 board = Boardstate([snake1, snake2], food, height, width)
@@ -81,6 +68,13 @@ a = iterative_deepening(board, 400.0, height, width, 1)
 println(a)
 move_snake!(snake1, food, a)
 winner = check_winner([snake1, snake2], 1, height, width)
+println("Winnner is $winner")
+# print("-----------------")
+print_board(board)
+a = iterative_deepening(board, 400.0, height, width, 2)
+println(a)
+move_snake!(snake2, food, a)
+winner = check_winner([snake1, snake2], 2, height, width)
 println("Winnner is $winner")
 # print("-----------------")
 print_board(board)
