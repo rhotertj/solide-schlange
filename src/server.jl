@@ -1,6 +1,7 @@
 include("battlesnake.jl")
 include("algorithms.jl")
 include("minimax.jl")
+include("maxn.jl")
 include("agent.jl")
 using Joseki, JSON, HTTP
 
