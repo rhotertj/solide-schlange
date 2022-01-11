@@ -50,14 +50,12 @@ function maxn(node::MaxNNode, depth::Int, player::Int, num_players::Int, you_ind
     if depth == 0 || node.winner !== nothing
         return score(node)
     end
+    while player in node.dead
+        player = next_player(player, num_players)
+    end
     next_p = next_player(player, num_players)
     max_vector = fill(-Inf, 4)
     next_nodes = possible_successors(node, player)
-    while length(next_nodes) == 0
-        player = next_player(player, num_players)
-        next_nodes = possible_successors(node, next_p)
-        next_p = next_player(player, num_players)
-    end
 
     for successor in next_nodes
         vector = maxn(successor, depth - 1, next_p, length(node.snakes), you_index)
