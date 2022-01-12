@@ -9,7 +9,7 @@ using Joseki, JSON, HTTP
 
 
 function index(req::HTTP.Request)
-    response_dict = Dict("name" => "solide julia", "color" => "#cc00cc", "head" => "shades", "tail" => "bolt", "apiversion" => "1")
+    response_dict = Dict("name" => "solide julia", "head" => "shades", "tail" => "bolt", "apiversion" => "1")
     simple_json_responder(req, response_dict)
 end
 
