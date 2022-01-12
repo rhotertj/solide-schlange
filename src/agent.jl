@@ -4,8 +4,9 @@ end
 
 function move(board::Boardstate, you_index::Int, simulation_time::Float64)
     # time stuff
+    simulation_time -= 0.05
     if length(board.snakes) > 2
-        simulation_time -= 0.05
+        simulation_time -= 0.1
         minimax_action = iterative_deepening_maxn(board, simulation_time, board.height, board.width, you_index)
     else
         minimax_action = iterative_deepening(board, simulation_time, board.height, board.width, you_index)

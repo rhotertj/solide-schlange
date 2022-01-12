@@ -19,6 +19,7 @@ function iterative_deepening_maxn(board::Boardstate, simulation_time::Float64, h
         best_action = nothing
         depth = 1
     
+        times = []
         start = now()
         last_time = Millisecond(0)
         values = Tuple{Vector{Float64}, MaxNNode}[]
@@ -39,8 +40,11 @@ function iterative_deepening_maxn(board::Boardstate, simulation_time::Float64, h
                 action_nodes = [v[2] for v in values]
             end
             last_time = now() - start_run
+            push!(times, last_time)
         end
-        # println("$depth")
+        println("$depth")
+        println("times $times")
+        println("Time used" ,now() - start)
         # println([(v[1], v[2].action) for v in values])
         return best_action
 end
