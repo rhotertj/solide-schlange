@@ -1,4 +1,4 @@
-# using .Battlesnake
+using DataStructures
 
 function floodfill(snakes::Vector{Snake}, width::Int, height::Int, player::Int)
     snek = snakes[player]
@@ -63,3 +63,56 @@ function maxN_floodfill(snakes::Vector{Snake}, width::Int, height::Int)
     return fields
 end
 
+function a_star_search(start_field:: Position, search_field::Position, board::Boardstate)
+
+    queue = PriorityQueue{Position, Int}()
+    came_from = Dict{Position, Tuple{Position, Direction}}()
+    cost_so_far = Dict{Position, Int}()
+    cost_so_far[start_field] = 0
+    queue[start_field] = 0
+
+    while !isempty(queue)
+        node = dequeue!(queue)
+        if node == search_field
+            break
+        end
+        for (dir, nb) in get_neighbors(node)
+            s = Inf
+            for snake in board.snakes
+                if nb in snake.body
+                    idx = findfirst(b -> b==nb, snake.body)
+                    s = length(snake.body) - 1 - idx
+                end
+            end
+            # next pos is / will be free, in bounds and no circles
+            if (!is_occupied_by_snake(nb, board) || h(start_field, nb) > s) && check_bounds(nb, board.height, board.width) && get(came_from, nb, nothing) === nothing
+                c = cost_so_far[node] + h(nb, search_field)
+                cost_so_far[nb] = cost_so_far[node] + 1
+                came_from[nb] = (node, dir)
+                queue[nb] = c
+            end
+        end
+    end
+
+    prev = search_field
+    direction = nothing
+    path = Vector{Tuple{Union{Direction, Nothing}, Position}}()
+    push!(path, (direction, prev))
+    while true
+        prev, direction = get(came_from, prev, (nothing, nothing))
+        if prev === nothing
+            return nothing, nothing
+        end
+        push!(path, (direction, prev))
+        if prev == start_field
+            break
+        end
+    end
+    return cost_so_far[search_field], path
+end
+
+function h(x::Position, y::Position)
+    dx = abs(x.x - y.x)
+    dy = abs(x.y - y.y)
+    return dx + dy
+end

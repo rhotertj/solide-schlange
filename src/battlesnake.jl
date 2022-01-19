@@ -13,6 +13,9 @@ struct Position
     y::Int
 end
 
+function get_neighbors(pos::Position)
+    return [(dir, move_from(pos, dir)) for dir in [up, down, left, right]]
+end
 
 function move_from(pos::Position, dir::Direction)
     if dir == up
@@ -107,6 +110,16 @@ mutable struct Boardstate
     height::Int
     width::Int
 end
+
+function is_occupied_by_snake(pos::Position, state::Boardstate)
+    for snake in state.snakes
+        if pos in snake.body
+            return true
+        end
+    end
+    return false
+end
+
 
 function print_board(state::Boardstate)
     board = fill(0, (state.height, state.width))

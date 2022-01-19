@@ -70,22 +70,27 @@ snake2 = Snake(
 food = Food([Position(11,5), Position(9,2)])
 ### Play best move
 height, width = 11, 11
-board = Boardstate([snake1, snake2, snake3], food, height, width)
-
+snakes = [snake1, snake2]
+board = Boardstate(snakes, food, height, width)
 print_board(board)
+println(a_star_search(Position(1,1), Position(5,5), board))
 # flood = floodfill([snake1, snake2], width, height, 1)
 # println(flood)
-a = iterative_deepening_maxn(board, 400.0, height, width, 1)
-println(a)
-move_snake!(snake1, food, a)
-winner = check_winner([snake1, snake2], 1, height, width)
-println("Winnner is $winner")
+# for x in 1:10
+#     for i in 1:length(snakes)
+#         a = iterative_deepening_maxn(board, 400.0, height, width, 3)
+#         move_snake!(snakes[3], food, a)
+#         # winner = check_winner(snakes, 1, height, width)
+#         # println("Winnner is $winner")
+#     end
+#     print_board(board)
+# end
 # print("-----------------")
-print_board(board)
-a = iterative_deepening(board, 400.0, height, width, 2)
-println(a)
-move_snake!(snake2, food, a)
-winner = check_winner([snake1, snake2], 2, height, width)
-println("Winnner is $winner")
-# print("-----------------")
-print_board(board)
+# print_board(board)
+# a = iterative_deepening(board, 400.0, height, width, 2)
+# println(a)
+# move_snake!(snake2, food, a)
+# winner = check_winner([snake1, snake2], 2, height, width)
+# println("Winnner is $winner")
+# # print("-----------------")
+# print_board(board)
