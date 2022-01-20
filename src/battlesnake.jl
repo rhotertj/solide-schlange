@@ -102,6 +102,52 @@ function check_bounds(pos::Position, height::Int, width::Int)
     return pos.x >= 1 && pos.x < width + 1 && pos.y >= 1 && pos.y < height + 1
 end
 
+function check_dead(snakes::Vector{Snake}, height::Int, width::Int)
+    dead = Set()
+    for (p, snek) in enumerate(snakes)
+        # starve
+        if snek.health == 0
+            push!(dead, p)
+        end
+        
+        for (o, opponent) in enumerate(snakes)
+            if o == p
+                continue
+            end
+
+            if get_head(snek) in opponent.body
+                # head2head
+                if get_head(snek) == get_head(opponent)
+                    # RAM
+                    if length(snek.body) > length(opponent.body)
+                        push!(dead, o)
+                    # draw
+                    elseif length(snek.body) == length(opponent.body)
+                        push!(dead, o)
+                        push!(dead, p)
+                    else
+                        # lost (head2head) collision with opponent
+                        push!(dead, p)
+                    end
+                else
+                    # ran into opponent
+                    push!(dead, p)            
+                end
+            end
+
+            # collision with self
+            if get_head(snek) in get_body_no_head(snek)
+                push!(dead, p)
+            end
+            if !check_bounds(get_head(snek), height, width)
+                push!(dead, p)
+            end
+            
+        end
+    end
+    return dead
+end
+
 
 # ============== BOARDSTATE ==================# 
 mutable struct Boardstate

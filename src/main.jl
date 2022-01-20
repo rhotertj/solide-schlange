@@ -53,7 +53,7 @@ snake1 = Snake(
         Position(7,3)
     ],
     false,
-    100
+    49
     )
 snake2 = Snake(
     [
@@ -66,14 +66,22 @@ snake2 = Snake(
     false,
     100
     )
-
+snake4 = Snake(
+        [
+            Position(9,5), 
+            Position(9,6)
+        ],
+        false,
+        100
+    )
 food = Food([Position(11,5), Position(9,2)])
 ### Play best move
 height, width = 11, 11
-snakes = [snake1, snake2]
+snakes = [snake1, snake2, snake3, snake4]
 board = Boardstate(snakes, food, height, width)
 print_board(board)
-println(a_star_search(Position(1,1), Position(5,5), board))
+move(board, 1, 0.4)
+# println(a_star_search(Position(1,1), Position(5,5), board))
 # flood = floodfill([snake1, snake2], width, height, 1)
 # println(flood)
 # for x in 1:10
