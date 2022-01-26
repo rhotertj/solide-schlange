@@ -5,8 +5,12 @@
 A battlesnake written in Julia.
 Uses alpha-beta search combined with iterative deepening. Leaf nodes are evaluated by a floodfill algorithm.
 
+Arena mode is heuristic based.
+
 Start server to host API:
 
 ```
-$ julia server.jl
+$ julia src/server.jl
 ```
+
+Note: Thanks to JIT compilatio, solide schlange needs some warmup games ;)
