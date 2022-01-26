@@ -13,4 +13,4 @@ Start server to host API:
 $ julia src/server.jl
 ```
 
-Note: Thanks to JIT compilatio, solide schlange needs some warmup games ;)
+Note: Thanks to JIT compilation, solide schlange needs some warmup games ;)
